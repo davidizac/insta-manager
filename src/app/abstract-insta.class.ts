@@ -8,8 +8,10 @@ export abstract class AbstractInsta {
     profilPic: string;
     isPostInitialized = false;
     first = 50;
+    query_hash='e769aa130647d2354c40ea6a439bfc08';
 
     resetField() {
+        // tslint:disable-next-line:max-line-length
         this.nextCursor = "QVFCUGwtUmxKOC1MTVd1UE1vblZxMGlwWWdRcUtRWWd6TE01Nl8ySWgzV0U4QngyaS1Mb1hZWDRWTWtlVVgzaEdvdHhzcW8wQU1qU2ZDYzJuWmliMDJlTQ==";
         this.userId = null;
         this.profilPic = null;
@@ -19,7 +21,7 @@ export abstract class AbstractInsta {
     get apiUrl(): string {
         if (this.userId && this.nextCursor) {
             // tslint:disable-next-line:max-line-length
-            return `https://www.instagram.com/graphql/query/?query_hash=e769aa130647d2354c40ea6a439bfc08&variables={"id":"${this.userId}","first":${this.first},"after":"${this.nextCursor}"}`;
+            return `https://www.instagram.com/graphql/query/?query_hash=${this.query_hash}&variables={"id":"${this.userId}","first":${this.first},"after":"${this.nextCursor}"}`;
         }
         return '';
     }

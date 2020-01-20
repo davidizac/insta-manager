@@ -35,7 +35,7 @@ export class PopularPostComponent extends AbstractInsta {
       const data = response.data.data.user.edge_owner_to_timeline_media;
       this.totalPics = data.count;
       this.getMostPopularImageForCurrentLoad(data.edges);
-      if (data.page_info.has_next_page && this.iterationNumber < 20 && data.edges[0].node.owner.id === this.userId) {
+      if (data.page_info.has_next_page && this.iterationNumber < 100 && data.edges[0].node.owner.id === this.userId) {
         this.nextCursor = data.page_info.end_cursor;
         this.cursors.push(this.nextCursor);
         console.log(this.cursors)
@@ -60,6 +60,8 @@ export class PopularPostComponent extends AbstractInsta {
   resetField() {
     super.resetField();
     this.post = new Post();
+    this.iterationNumber = 0;
+    this.cursors = [];
   }
 
 }

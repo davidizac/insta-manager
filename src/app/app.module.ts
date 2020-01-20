@@ -35,7 +35,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatRadioModule,
     InfiniteScrollModule,
     MatProgressBarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatProgressBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
