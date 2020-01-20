@@ -1,0 +1,8 @@
+<mat-progress-bar
+  *ngIf="progressBarValue > 0 && 100 > progressBarValue"
+  mode="determinate"
+  [value]="progressBarValue"
+></mat-progress-bar>
+<div class="popular-pic" *ngIf="isPostInitialized">
+  <app-insta-card [post]="post" [profilPic]="profilPic"> </app-insta-card>
+</div>

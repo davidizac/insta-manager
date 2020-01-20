@@ -1,0 +1,12 @@
+.images {
+  display: flex;
+  justify-content: center;
+  .insta-pic-list {
+    width: 63%;
+    display: flex;
+    flex-wrap: wrap;
+    .insta-pic {
+      padding: 30px;
+    }
+  }
+}

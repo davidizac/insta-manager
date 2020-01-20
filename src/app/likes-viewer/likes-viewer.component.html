@@ -1,0 +1,13 @@
+<div class="images" *ngIf="isPostInitialized">
+  <div
+    class="insta-pic-list"
+    infiniteScroll
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="150"
+    (scrolled)="onScroll()"
+  >
+    <div class="insta-pic" *ngFor="let post of posts">
+      <app-insta-card [post]="post" [profilPic]="profilPic"></app-insta-card>
+    </div>
+  </div>
+</div>

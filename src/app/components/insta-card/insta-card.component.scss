@@ -1,0 +1,39 @@
+.example-card {
+  width: 300px;
+  height: 500px;
+  overflow: hidden;
+}
+
+.comment {
+  cursor: pointer;
+}
+
+.example-header-image {
+  background-size: cover;
+  img {
+    width: 50px;
+    border-radius: 26px;
+    margin-left: -7px;
+    margin-top: -13px;
+  }
+}
+
+mat-card-header {
+  margin-bottom: 14px;
+}
+
+::ng-deep {
+  mat-card-header {
+    .mat-card-header-text {
+      margin-left: 56px;
+      color: #ff4081;
+    }
+  }
+}
+
+mat-card-title {
+  display: flex;
+  span {
+    margin-right: 10px;
+  }
+}

@@ -1,27 +1,44 @@
-<div class="center"> 
-  <div class="content"> 
-    <div class="input"> 
+<div class="center">
+  <div class="content">
+    <div class="input">
+      <div class="insert-user">
         <mat-form-field class="example-full-width">
-            <input matInput placeholder="Instagram Username" [(ngModel)]="username">
-          </mat-form-field>
-          <button mat-raised-button color="primary" (click)="getMostLikedPic()">Submit</button>
-    </div> 
-    
-    <div class="output" *ngIf="bestLikedPic.imageUrl"> 
-        <mat-card class="example-card">
-            <mat-card-header>
-              <div mat-card-avatar class="example-header-image">
-                <img mat-card-image [src]="profilPic">
-              </div>
-              <mat-card-title>Most popular picture: {{bestLikedPic.numberOfLikes}} likes</mat-card-title>
-            </mat-card-header>
-            <img mat-card-image [src]="bestLikedPic.imageUrl">
-            <mat-card-content>
-              <p>
-                {{bestLikedPic.comment}}
-              </p>
-            </mat-card-content>
-          </mat-card>
-    </div> 
-  </div> 
+          <input
+            matInput
+            placeholder="Instagram Username"
+            (keyup)="handleKeyUp($event)"
+            [(ngModel)]="username"
+          />
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="onSubmit()">
+          Submit
+        </button>
+      </div>
+      <mat-radio-group
+        aria-labelledby="example-radio-group-label"
+        class="example-radio-group"
+        [(ngModel)]="filterSelected"
+      >
+        <mat-radio-button
+          class="example-radio-button"
+          *ngFor="let filter of filters"
+          [value]="filter"
+          (change)="onChangeFilter($event)"
+        >
+          {{ filter }}
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div class="output">
+      <app-popular-post
+        [hidden]="filterSelected !== 'Most popular post'"
+        [username]="username"
+      ></app-popular-post>
+      <app-likes-viewer
+        [hidden]="filterSelected !== 'See all likes'"
+        [username]="username"
+      ></app-likes-viewer>
+    </div>
+  </div>
 </div>

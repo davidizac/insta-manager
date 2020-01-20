@@ -1,0 +1,19 @@
+<mat-card class="example-card">
+  <mat-card-header>
+    <div mat-card-avatar class="example-header-image">
+      <img mat-card-image [src]="profilPic" />
+    </div>
+    <mat-card-title>
+      <span>
+        {{ readableNumber }}
+      </span>
+      <i class="material-icons">thumb_up_alt</i>
+    </mat-card-title>
+  </mat-card-header>
+  <img mat-card-image [src]="post.imageUrl" />
+  <mat-card-content>
+    <p class="comment" [matTooltip]="post.comment" matTooltipPosition="right">
+      {{ post.comment }}
+    </p>
+  </mat-card-content>
+</mat-card>
