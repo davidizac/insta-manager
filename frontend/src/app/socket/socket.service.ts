@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 import { Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 
 @Injectable({ providedIn: 'root' })
@@ -9,7 +10,7 @@ export class SocketService {
     newCursor: Subject<any> = new Subject<any>();
 
     constructor() {
-        this.socket = io('https://theinstaviewer.com');
+        this.socket = io(`${environment.serverUrl}`);
         this.socketListener(this.socket);
     }
 

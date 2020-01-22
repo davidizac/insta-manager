@@ -1,5 +1,6 @@
 import { Input } from '@angular/core';
 import axios from 'axios';
+import { environment } from 'src/environments/environment';
 
 export abstract class AbstractInsta {
     @Input() username: string;
@@ -14,7 +15,7 @@ export abstract class AbstractInsta {
         // tslint:disable-next-line:max-line-length
         this.nextCursor = localStorage.getItem('cursor');
         if (this.nextCursor === 'null' || !this.nextCursor) {
-            axios.get('https://theinstaviewer/api/cursor').then(res => {
+            axios.get(`${environment.serverUrl}/api/cursor`).then(res => {
                 this.nextCursor = res.data;
                 localStorage.setItem('cursor', this.nextCursor)
             });
