@@ -15,7 +15,8 @@ export abstract class AbstractInsta {
         this.nextCursor = localStorage.getItem('cursor');
         if (this.nextCursor === 'null' || !this.nextCursor) {
             axios.get('http://localhost:3000/api/cursor').then(res => {
-                console.log(res)
+                this.nextCursor = res.data;
+                localStorage.setItem('cursor', this.nextCursor)
             });
         }
         this.userId = null;
