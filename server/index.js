@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const server = require("http").createServer(app);
 const path = require("path");
 const bodyParser = require("body-parser");
 const socketio = require("socket.io");
@@ -26,12 +25,6 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-socketServerInstance = socketio(server);
-
-socketServerInstance.on("connection", function(socket) {
-  socketServerInstance.emit("cursor", global.cursor);
-});
-
 global.cursor =
   "QVFEbDE3TlBIalRIWTJKSjNHM0FUUFktVnVXM1pvc0VGNTRVMXoteWhwazg2a1FkdlRoWlVidGZ5YjdDX3FxVEdCeC1nQndTbW1PZC1uMDBMN1Q5TDctMg%3D%3D";
 
@@ -48,6 +41,8 @@ app.all("*", (req, res) => {
   res.sendFile(path.join(__dirname, "/dist", "index.html"));
 });
 
-server.listen(3000, () => {
-  console.log("Server is Running");
+server = app.listen(3000);
+const socketServerInstance = socketio.listen(server);
+socketServerInstance.on("connection", function(socket) {
+  socketServerInstance.emit("cursor", global.cursor);
 });
