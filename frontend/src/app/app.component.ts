@@ -9,8 +9,8 @@ import { LikesViewerComponent } from './likes-viewer/likes-viewer.component';
 export class AppComponent {
 
   username: string;
-  filterSelected = 'Most popular post';
-  filters: string[] = ['Most popular post', 'See all likes'];
+  filterSelected = 'Popular Pic';
+  filters: string[] = ['Popular Pic', 'All Pics'];
 
   @ViewChild(PopularPostComponent, { static: true }) popularPostComponent: PopularPostComponent;
   @ViewChild(LikesViewerComponent, { static: true }) likesViewerComponent: LikesViewerComponent;
@@ -21,7 +21,7 @@ export class AppComponent {
   }
 
   onSubmit() {
-    if (this.filterSelected === 'Most popular post') {
+    if (this.filterSelected === 'Popular Pic') {
       this.popularPostComponent.resetField();
       this.popularPostComponent.getMostLikedPic();
     } else {

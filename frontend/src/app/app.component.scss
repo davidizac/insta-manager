@@ -34,16 +34,40 @@ h1 {
 .example-radio-group {
   display: flex;
   flex-direction: column;
-  margin: 15px 0;
+  margin: 15px 0px 15px 50px;
 }
 
 .example-radio-button {
   margin: 5px;
 }
 
-mat-radio-group {
-  margin-left: 50px !important;
-}
 .mat-raised-button {
   border-radius: 25px;
+}
+.selected {
+  color: #ff4081;
+}
+
+@media screen and (max-width: 500px) {
+  .input {
+    flex-direction: column-reverse;
+  }
+  .example-radio-group {
+    flex-direction: row;
+    margin-left: 0px;
+    justify-content: space-between;
+  }
+  .center {
+    padding: 0 60px;
+  }
+
+  .insert-user {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mat-raised-button {
+    width: 50%;
+    margin: auto;
+  }
 }
