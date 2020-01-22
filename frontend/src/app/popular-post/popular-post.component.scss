@@ -12,3 +12,13 @@ mat-progress-bar {
     display: none;
   }
 }
+
+@media screen and (min-width: 500px) {
+  .only-for-mobile {
+    display: none;
+  }
+}
+
+mat-progress-spinner {
+  margin: auto;
+}
