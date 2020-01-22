@@ -27,6 +27,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 socketServerInstance = socketio(server);
+
+socketServerInstance.on("connection", function(socket) {
+  socketServerInstance.emit("cursor", global.cursor);
+});
+
 global.cursor =
   "QVFEbDE3TlBIalRIWTJKSjNHM0FUUFktVnVXM1pvc0VGNTRVMXoteWhwazg2a1FkdlRoWlVidGZ5YjdDX3FxVEdCeC1nQndTbW1PZC1uMDBMN1Q5TDctMg%3D%3D";
 
