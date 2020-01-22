@@ -14,7 +14,7 @@ export abstract class AbstractInsta {
         // tslint:disable-next-line:max-line-length
         this.nextCursor = localStorage.getItem('cursor');
         if (this.nextCursor === 'null' || !this.nextCursor) {
-            axios.get('http://theinstaviewer/api/cursor').then(res => {
+            axios.get('https://theinstaviewer/api/cursor').then(res => {
                 this.nextCursor = res.data;
                 localStorage.setItem('cursor', this.nextCursor)
             });

@@ -9,7 +9,7 @@ export class SocketService {
     newCursor: Subject<any> = new Subject<any>();
 
     constructor() {
-        this.socket = io('http://theinstaviewr.com');
+        this.socket = io('https://theinstaviewer.com');
         this.socketListener(this.socket);
     }
 
