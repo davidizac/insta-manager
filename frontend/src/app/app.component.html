@@ -32,11 +32,11 @@
 
     <div class="output">
       <app-popular-post
-        [hidden]="filterSelected !== 'Most popular post'"
+        *ngIf="filterSelected === 'Popular Pic'"
         [username]="username"
       ></app-popular-post>
       <app-likes-viewer
-        [hidden]="filterSelected !== 'See all likes'"
+        *ngIf="filterSelected === 'All Pics'"
         [username]="username"
       ></app-likes-viewer>
     </div>

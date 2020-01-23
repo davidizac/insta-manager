@@ -12,20 +12,15 @@ export class LikesViewerComponent extends AbstractInsta {
 
   posts: Array<Post>;
 
-  getAllImages() {
-    return super.getUserData()
-      .then(() => {
-        this.fetchImageFromInsta();
-      });
-  }
-
-  fetchImageFromInsta() {
+  getAllPostsByUser() {
     return axios.get(this.apiUrl).then((response) => {
       if (response.data.data) {
         const data = response.data.data.user.edge_owner_to_timeline_media;
         this.nextCursor = data.page_info.end_cursor;
         this.getImagesForCurrentLoad(data.edges);
       }
+    }).catch(e => {
+      console.error(e);
     });
   }
 
@@ -41,7 +36,7 @@ export class LikesViewerComponent extends AbstractInsta {
   }
 
   onScroll() {
-    this.fetchImageFromInsta();
+    this.getAllPostsByUser();
   }
 
   resetField() {

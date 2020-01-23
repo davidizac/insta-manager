@@ -3,19 +3,22 @@ import axios from 'axios';
 
 export abstract class AbstractInsta {
     @Input() username: string;
-    nextCursor = "QVFCUGwtUmxKOC1MTVd1UE1vblZxMGlwWWdRcUtRWWd6TE01Nl8ySWgzV0U4QngyaS1Mb1hZWDRWTWtlVVgzaEdvdHhzcW8wQU1qU2ZDYzJuWmliMDJlTQ==";
+    nextCursor = 'QVFCUGwtUmxKOC1MTVd1UE1vblZxMGlwWWdRcUtRWWd6TE01Nl8ySWgzV0U4QngyaS1Mb1hZWDRWTWtlVVgzaEdvdHhzcW8wQU1qU2ZDYzJuWmliMDJlTQ==';
     userId: string;
     profilPic: string;
     isPostInitialized = false;
     first = 50;
-    query_hash='e769aa130647d2354c40ea6a439bfc08';
+    query_hash = 'e769aa130647d2354c40ea6a439bfc08';
+    userDoesNotExist = false;
+    isPrivateAccount = false;
 
     resetField() {
         // tslint:disable-next-line:max-line-length
-        this.nextCursor = "QVFCUGwtUmxKOC1MTVd1UE1vblZxMGlwWWdRcUtRWWd6TE01Nl8ySWgzV0U4QngyaS1Mb1hZWDRWTWtlVVgzaEdvdHhzcW8wQU1qU2ZDYzJuWmliMDJlTQ==";
+        this.nextCursor = 'QVFCUGwtUmxKOC1MTVd1UE1vblZxMGlwWWdRcUtRWWd6TE01Nl8ySWgzV0U4QngyaS1Mb1hZWDRWTWtlVVgzaEdvdHhzcW8wQU1qU2ZDYzJuWmliMDJlTQ==';
         this.userId = null;
         this.profilPic = null;
         this.isPostInitialized = false;
+        this.isPrivateAccount = false;
     }
 
     get apiUrl(): string {
@@ -35,9 +38,10 @@ export abstract class AbstractInsta {
                 try {
                     this.userId = script.innerText.toString().split(`"id":`)[1].split(`"`)[1];
                     this.profilPic = script.innerText.toString().split(`"profile_pic_url":`)[1].split(`"`)[1].replace(/\\u0026/g, '&');
-                }
-                catch (e) { }
+                } catch (e) { }
             });
+        }).catch(() => {
+            this.userDoesNotExist = true;
         });
     }
 

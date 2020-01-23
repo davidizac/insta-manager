@@ -22,12 +22,27 @@ export class AppComponent {
 
   onSubmit() {
     if (this.filterSelected === 'Most popular post') {
-      this.popularPostComponent.resetField();
-      this.popularPostComponent.getMostLikedPic();
+      this.startComponent(this.popularPostComponent)
+        .then(() => {
+          this.popularPostComponent.getPopularPic()
+            .catch(() => {
+              this.popularPostComponent.isPrivateAccount = true;
+            });
+        });
     } else {
-      this.likesViewerComponent.resetField();
-      this.likesViewerComponent.getAllImages();
+      this.startComponent(this.likesViewerComponent)
+        .then(() => {
+          this.likesViewerComponent.getAllPostsByUser()
+            .catch(() => {
+              this.likesViewerComponent.isPrivateAccount = true;
+            });
+        });
     }
+  }
+
+  startComponent(component) {
+    component.resetField();
+    return component.getUserData();
   }
 
   handleKeyUp(event) {

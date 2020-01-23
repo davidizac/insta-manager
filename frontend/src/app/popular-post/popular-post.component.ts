@@ -22,31 +22,25 @@ export class PopularPostComponent extends AbstractInsta {
     return 0;
   }
 
-  getMostLikedPic() {
-    return super.getUserData()
-      .then(() => {
-        this.fetchImageFromInsta();
-      });
-  }
-
-  fetchImageFromInsta() {
+  getPopularPic() {
     return axios.get(this.apiUrl).then((response) => {
       this.iterationNumber++;
       const data = response.data.data.user.edge_owner_to_timeline_media;
       this.totalPics = data.count;
-      this.getMostPopularImageForCurrentLoad(data.edges);
+      this.getPopularPicForCurrentLoad(data.edges);
       if (data.page_info.has_next_page && this.iterationNumber < 100 && data.edges[0].node.owner.id === this.userId) {
         this.nextCursor = data.page_info.end_cursor;
         this.cursors.push(this.nextCursor);
-        console.log(this.cursors)
         setTimeout(() => {
-          this.fetchImageFromInsta();
+          this.getPopularPic();
         }, 10);
       }
+    }).catch(e => {
+      console.error(e);
     });
   }
 
-  getMostPopularImageForCurrentLoad(nodes) {
+  getPopularPicForCurrentLoad(nodes) {
     nodes.forEach(({ node }) => {
       if (this.post.numberOfLikes < node.edge_media_preview_like.count) {
         this.post.numberOfLikes = node.edge_media_preview_like.count;
