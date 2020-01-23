@@ -11,9 +11,11 @@ import { Post } from '../models/post.model';
 export class LikesViewerComponent extends AbstractInsta {
 
   posts: Array<Post>;
+  isLoading = false;
 
   getAllPostsByUser() {
     return axios.get(this.apiUrl).then((response) => {
+      this.isLoading = false;
       if (response.data.data) {
         const data = response.data.data.user.edge_owner_to_timeline_media;
         this.nextCursor = data.page_info.end_cursor;

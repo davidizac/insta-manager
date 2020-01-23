@@ -4,6 +4,7 @@
       <div class="insert-user">
         <mat-form-field class="example-full-width">
           <input
+            spellcheck="false"
             matInput
             placeholder="Instagram Username"
             (keyup)="handleKeyUp($event)"
@@ -21,6 +22,7 @@
       >
         <mat-radio-button
           class="example-radio-button"
+          [ngClass]="{ selected: filter === filterSelected }"
           *ngFor="let filter of filters"
           [value]="filter"
           (change)="onChangeFilter($event)"

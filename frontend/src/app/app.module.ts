@@ -15,6 +15,7 @@ import { InstaCardComponent } from './components/insta-card/insta-card.component
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     InfiniteScrollModule,
     MatProgressBarModule,
     MatTooltipModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
