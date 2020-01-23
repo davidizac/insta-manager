@@ -10,3 +10,13 @@
     }
   }
 }
+
+@media screen and (max-width: 500px) {
+  .insta-pic-list {
+    width: inherit !important;
+  }
+}
+
+mat-progress-spinner {
+  margin: auto;
+}

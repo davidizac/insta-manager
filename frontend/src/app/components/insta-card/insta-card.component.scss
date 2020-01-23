@@ -37,3 +37,14 @@ mat-card-title {
     margin-right: 10px;
   }
 }
+
+@media screen and (max-width: 500px) {
+  .example-card {
+    width: 250px;
+  }
+  ::ng-deep {
+    mat-card-header .mat-card-header-text {
+      margin-left: 30px;
+    }
+  }
+}

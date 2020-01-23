@@ -14,6 +14,7 @@ export class PopularPostComponent extends AbstractInsta {
   iterationNumber = 0;
   post: Post;
   totalPics = 0;
+  isLoading = false;
 
   get progressBarValue(): number {
     if (this.iterationNumber > 0) {
@@ -23,6 +24,7 @@ export class PopularPostComponent extends AbstractInsta {
   }
 
   getMostLikedPic() {
+    this.isLoading = true;
     return super.getUserData()
       .then(() => {
         this.fetchImageFromInsta();
@@ -35,6 +37,7 @@ export class PopularPostComponent extends AbstractInsta {
       const data = response.data.data.user.edge_owner_to_timeline_media;
       this.totalPics = data.count;
       this.getMostPopularImageForCurrentLoad(data.edges);
+      this.isLoading = false;
       if (data.page_info.has_next_page && this.iterationNumber < 100 && data.edges[0].node.owner.id === this.userId) {
         this.nextCursor = data.page_info.end_cursor;
         this.cursors.push(this.nextCursor);

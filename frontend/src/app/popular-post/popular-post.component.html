@@ -1,8 +1,17 @@
 <mat-progress-bar
   *ngIf="progressBarValue > 0 && 100 > progressBarValue"
+  class="hide-for-mobile"
   mode="determinate"
   [value]="progressBarValue"
 ></mat-progress-bar>
+<mat-progress-spinner
+  class="example-margin only-for-mobile"
+  color="primary"
+  mode="indeterminate"
+  value="50"
+  *ngIf="isLoading"
+>
+</mat-progress-spinner>
 <div class="popular-pic" *ngIf="isPostInitialized">
   <app-insta-card [post]="post" [profilPic]="profilPic"> </app-insta-card>
 </div>

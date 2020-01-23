@@ -4,6 +4,7 @@
       <div class="insert-user">
         <mat-form-field class="example-full-width">
           <input
+            spellcheck="false"
             matInput
             placeholder="Instagram Username"
             (keyup)="handleKeyUp($event)"
@@ -21,6 +22,7 @@
       >
         <mat-radio-button
           class="example-radio-button"
+          [ngClass]="{ selected: filter === filterSelected }"
           *ngFor="let filter of filters"
           [value]="filter"
           (change)="onChangeFilter($event)"
@@ -32,11 +34,11 @@
 
     <div class="output">
       <app-popular-post
-        [hidden]="filterSelected !== 'Most popular post'"
+        [hidden]="filterSelected !== 'Popular Pic'"
         [username]="username"
       ></app-popular-post>
       <app-likes-viewer
-        [hidden]="filterSelected !== 'See all likes'"
+        [hidden]="filterSelected !== 'All Pics'"
         [username]="username"
       ></app-likes-viewer>
     </div>

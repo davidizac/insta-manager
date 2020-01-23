@@ -1,18 +1,25 @@
 import { Input } from '@angular/core';
 import axios from 'axios';
+import { environment } from 'src/environments/environment';
 
 export abstract class AbstractInsta {
     @Input() username: string;
-    nextCursor = "QVFCUGwtUmxKOC1MTVd1UE1vblZxMGlwWWdRcUtRWWd6TE01Nl8ySWgzV0U4QngyaS1Mb1hZWDRWTWtlVVgzaEdvdHhzcW8wQU1qU2ZDYzJuWmliMDJlTQ==";
+    nextCursor = localStorage.getItem('cursor');
     userId: string;
     profilPic: string;
     isPostInitialized = false;
     first = 50;
-    query_hash='e769aa130647d2354c40ea6a439bfc08';
+    query_hash = 'e769aa130647d2354c40ea6a439bfc08';
 
     resetField() {
         // tslint:disable-next-line:max-line-length
-        this.nextCursor = "QVFCUGwtUmxKOC1MTVd1UE1vblZxMGlwWWdRcUtRWWd6TE01Nl8ySWgzV0U4QngyaS1Mb1hZWDRWTWtlVVgzaEdvdHhzcW8wQU1qU2ZDYzJuWmliMDJlTQ==";
+        this.nextCursor = localStorage.getItem('cursor');
+        if (this.nextCursor === 'null' || !this.nextCursor) {
+            axios.get(`${environment.serverUrl}/api/cursor`).then(res => {
+                this.nextCursor = res.data;
+                localStorage.setItem('cursor', this.nextCursor)
+            });
+        }
         this.userId = null;
         this.profilPic = null;
         this.isPostInitialized = false;
