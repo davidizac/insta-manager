@@ -1,8 +1,8 @@
-import { Input } from '@angular/core';
+import { Input, OnInit } from '@angular/core';
 import axios from 'axios';
 import { environment } from 'src/environments/environment';
 
-export abstract class AbstractInsta {
+export abstract class AbstractInsta implements OnInit {
     @Input() username: string;
     nextCursor = localStorage.getItem('cursor');
     userId: string;
@@ -12,6 +12,10 @@ export abstract class AbstractInsta {
     query_hash = 'e769aa130647d2354c40ea6a439bfc08';
     userDoesNotExist = false;
     isPrivateAccount = false;
+
+    ngOnInit() {
+        this.resetField();
+    }
 
     resetField() {
         // tslint:disable-next-line:max-line-length
@@ -47,8 +51,6 @@ export abstract class AbstractInsta {
                     this.profilPic = script.innerText.toString().split(`"profile_pic_url":`)[1].split(`"`)[1].replace(/\\u0026/g, '&');
                 } catch (e) { }
             });
-        }).catch(() => {
-            this.userDoesNotExist = true;
         });
     }
 

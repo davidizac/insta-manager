@@ -10,6 +10,9 @@
             (keyup)="handleKeyUp($event)"
             [(ngModel)]="username"
           />
+          <mat-error *ngIf="errorMessage">
+            {{ errorMessage }}
+          </mat-error>
         </mat-form-field>
         <button mat-raised-button color="primary" (click)="onSubmit()">
           Submit
@@ -34,11 +37,11 @@
 
     <div class="output">
       <app-popular-post
-        *ngIf="filterSelected === 'Popular Pic'"
+        [hidden]="filterSelected !== 'Popular Pic'"
         [username]="username"
       ></app-popular-post>
       <app-likes-viewer
-        *ngIf="filterSelected === 'All Pics'"
+        [hidden]="filterSelected !== 'All Pics'"
         [username]="username"
       ></app-likes-viewer>
     </div>

@@ -12,6 +12,7 @@ export class AppComponent implements OnInit {
   username: string;
   filterSelected = 'Popular Pic';
   filters: string[] = ['Popular Pic', 'All Pics'];
+  errorMessage = '';
 
   constructor(private socketService: SocketService) { }
 
@@ -25,34 +26,41 @@ export class AppComponent implements OnInit {
       });
   }
 
-
   onChangeFilter(event) {
     this.filterSelected = event.value;
   }
 
   onSubmit() {
-    if (this.filterSelected === 'Popular Pic') {
-      this.startComponent(this.popularPostComponent)
-        .then(() => {
-          this.popularPostComponent.getPopularPic()
-            .catch(() => {
-              this.popularPostComponent.isPrivateAccount = true;
-            });
-        });
-    } else {
-      this.startComponent(this.likesViewerComponent)
-        .then(() => {
-          this.likesViewerComponent.getAllPostsByUser()
-            .catch(() => {
-              this.likesViewerComponent.isPrivateAccount = true;
-            });
-        });
+    switch (this.filterSelected) {
+      case 'Popular Pic':
+        this.startComponent(this.popularPostComponent)
+          .then(() => {
+            this.popularPostComponent.getPopularPic()
+              .catch(() => {
+                this.popularPostComponent.isPrivateAccount = true;
+              });
+          });
+        break;
+      case 'All Pics':
+        this.startComponent(this.likesViewerComponent)
+          .then(() => {
+            this.likesViewerComponent.getAllPics()
+              .catch(() => {
+                this.errorMessage = 'This account is private.';
+              });
+          });
+        break;
+      default:
+        break;
     }
   }
 
   startComponent(component) {
     component.resetField();
-    return component.getUserData();
+    return component.getUserData()
+      .catch(() => {
+        this.errorMessage = 'User does not exist';
+      });
   }
 
   handleKeyUp(event) {

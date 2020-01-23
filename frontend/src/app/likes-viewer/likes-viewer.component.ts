@@ -13,7 +13,8 @@ export class LikesViewerComponent extends AbstractInsta {
   posts: Array<Post>;
   isLoading = false;
 
-  getAllPostsByUser() {
+  getAllPics() {
+    this.isLoading = true;
     return axios.get(this.apiUrl).then((response) => {
       this.isLoading = false;
       if (response.data.data) {
@@ -21,12 +22,13 @@ export class LikesViewerComponent extends AbstractInsta {
         this.nextCursor = data.page_info.end_cursor;
         this.getImagesForCurrentLoad(data.edges);
       }
-    }).catch(e => {
-      console.error(e);
     });
   }
 
   getImagesForCurrentLoad(nodes) {
+    if (nodes.length < 1) {
+      throw new Error('Private Account');
+    }
     nodes.forEach(({ node }) => {
       const post = new Post(
         node.edge_media_preview_like.count,
@@ -38,7 +40,7 @@ export class LikesViewerComponent extends AbstractInsta {
   }
 
   onScroll() {
-    this.getAllPostsByUser();
+    this.getAllPics();
   }
 
   resetField() {

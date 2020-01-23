@@ -10,7 +10,6 @@ import { Post } from '../models/post.model';
 })
 export class PopularPostComponent extends AbstractInsta {
 
-  cursors = [this.nextCursor];
   iterationNumber = 0;
   post: Post;
   totalPics = 0;
@@ -33,17 +32,17 @@ export class PopularPostComponent extends AbstractInsta {
       this.isLoading = false;
       if (data.page_info.has_next_page && this.iterationNumber < 100 && data.edges[0].node.owner.id === this.userId) {
         this.nextCursor = data.page_info.end_cursor;
-        this.cursors.push(this.nextCursor);
         setTimeout(() => {
           this.getPopularPic();
         }, 10);
       }
-    }).catch(e => {
-      console.error(e);
     });
   }
 
   getPopularPicForCurrentLoad(nodes) {
+    if (nodes.length < 1) {
+      throw new Error('Private Account');
+    }
     nodes.forEach(({ node }) => {
       if (this.post.numberOfLikes < node.edge_media_preview_like.count) {
         this.post.numberOfLikes = node.edge_media_preview_like.count;
@@ -58,7 +57,6 @@ export class PopularPostComponent extends AbstractInsta {
     super.resetField();
     this.post = new Post();
     this.iterationNumber = 0;
-    this.cursors = [];
   }
 
 }
