@@ -10,10 +10,9 @@ import { Post } from '../models/post.model';
 })
 export class PopularPostComponent extends AbstractInsta {
 
-  iterationNumber = 0;
+  iterationNumber = -1;
   post: Post;
   totalPics = 0;
-  isLoading = false;
 
   get progressBarValue(): number {
     if (this.iterationNumber > 0) {
@@ -23,7 +22,6 @@ export class PopularPostComponent extends AbstractInsta {
   }
 
   getPopularPic() {
-    this.isLoading = true;
     return axios.get(this.apiUrl).then((response) => {
       this.iterationNumber++;
       const data = response.data.data.user.edge_owner_to_timeline_media;
@@ -56,7 +54,7 @@ export class PopularPostComponent extends AbstractInsta {
   resetField() {
     super.resetField();
     this.post = new Post();
-    this.iterationNumber = 0;
+    this.iterationNumber = -1;
   }
 
 }

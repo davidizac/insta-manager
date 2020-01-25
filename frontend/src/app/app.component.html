@@ -1,7 +1,10 @@
 <div class="center">
   <div class="content">
     <div class="input">
-      <div class="insert-user">
+      <div
+        class="insert-user"
+        [ngClass]="{ 'display-error': !isUserExist || !isPublicAccount }"
+      >
         <mat-form-field class="example-full-width">
           <input
             spellcheck="false"
@@ -10,10 +13,13 @@
             (keyup)="handleKeyUp($event)"
             [(ngModel)]="username"
           />
-          <mat-error *ngIf="errorMessage">
-            {{ errorMessage }}
-          </mat-error>
         </mat-form-field>
+        <span class="error-message" *ngIf="!isUserExist"
+          >This username does not exist.</span
+        >
+        <span class="error-message" *ngIf="!isPublicAccount"
+          >This account is private.</span
+        >
         <button mat-raised-button color="primary" (click)="onSubmit()">
           Submit
         </button>

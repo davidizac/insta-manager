@@ -10,8 +10,7 @@ export abstract class AbstractInsta implements OnInit {
     isPostInitialized = false;
     first = 50;
     query_hash = 'e769aa130647d2354c40ea6a439bfc08';
-    userDoesNotExist = false;
-    isPrivateAccount = false;
+    isLoading = false;
 
     ngOnInit() {
         this.resetField();
@@ -29,7 +28,6 @@ export abstract class AbstractInsta implements OnInit {
         this.userId = null;
         this.profilPic = null;
         this.isPostInitialized = false;
-        this.isPrivateAccount = false;
     }
 
     get apiUrl(): string {

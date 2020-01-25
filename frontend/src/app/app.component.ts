@@ -12,7 +12,8 @@ export class AppComponent implements OnInit {
   username: string;
   filterSelected = 'Popular Pic';
   filters: string[] = ['Popular Pic', 'All Pics'];
-  errorMessage = '';
+  isPublicAccount = true;
+  isUserExist = true;
 
   constructor(private socketService: SocketService) { }
 
@@ -33,22 +34,10 @@ export class AppComponent implements OnInit {
   onSubmit() {
     switch (this.filterSelected) {
       case 'Popular Pic':
-        this.startComponent(this.popularPostComponent)
-          .then(() => {
-            this.popularPostComponent.getPopularPic()
-              .catch(() => {
-                this.popularPostComponent.isPrivateAccount = true;
-              });
-          });
+        this.getPopularPic();
         break;
       case 'All Pics':
-        this.startComponent(this.likesViewerComponent)
-          .then(() => {
-            this.likesViewerComponent.getAllPics()
-              .catch(() => {
-                this.errorMessage = 'This account is private.';
-              });
-          });
+        this.getAllPics();
         break;
       default:
         break;
@@ -56,10 +45,47 @@ export class AppComponent implements OnInit {
   }
 
   startComponent(component) {
+    component.isLoading = true;
     component.resetField();
     return component.getUserData()
       .catch(() => {
-        this.errorMessage = 'User does not exist';
+        this.isUserExist = false;
+        component.isLoading = false;
+        setTimeout(() => {
+          this.isUserExist = true;
+        }, 3000);
+      });
+  }
+
+  getPopularPic() {
+    this.startComponent(this.popularPostComponent)
+      .then(() => {
+        this.popularPostComponent.getPopularPic()
+          .catch(() => {
+            if (this.isUserExist) {
+              this.isPublicAccount = false;
+              this.popularPostComponent.isLoading = false;
+              setTimeout(() => {
+                this.isPublicAccount = true;
+              }, 3000);
+            }
+          });
+      });
+  }
+
+  getAllPics() {
+    this.startComponent(this.likesViewerComponent)
+      .then(() => {
+        this.likesViewerComponent.getAllPics()
+          .catch(() => {
+            if (this.isUserExist) {
+              this.isPublicAccount = false;
+              this.likesViewerComponent.isLoading = false;
+              setTimeout(() => {
+                this.isPublicAccount = true;
+              }, 3000);
+            }
+          });
       });
   }
 
@@ -68,4 +94,7 @@ export class AppComponent implements OnInit {
       this.onSubmit();
     }
   }
+
+
+
 }

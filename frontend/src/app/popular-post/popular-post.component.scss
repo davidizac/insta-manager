@@ -13,12 +13,6 @@ mat-progress-bar {
   }
 }
 
-@media screen and (min-width: 500px) {
-  .only-for-mobile {
-    display: none;
-  }
-}
-
 mat-progress-spinner {
   margin: auto;
 }

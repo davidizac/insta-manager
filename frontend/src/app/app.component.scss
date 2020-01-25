@@ -17,6 +17,10 @@ label {
   justify-content: center;
 }
 
+.insert-user {
+  position: relative;
+}
+
 h1 {
   font-weight: 400;
 }
@@ -69,5 +73,15 @@ h1 {
   .mat-raised-button {
     width: 50%;
     margin: auto;
+  }
+}
+
+.display-error {
+  .error-message {
+    display: block;
+    font-size: 12px;
+    position: absolute;
+    top: 47px;
+    color: #f44336;
   }
 }

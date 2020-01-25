@@ -11,10 +11,8 @@ import { Post } from '../models/post.model';
 export class LikesViewerComponent extends AbstractInsta {
 
   posts: Array<Post>;
-  isLoading = false;
 
   getAllPics() {
-    this.isLoading = true;
     return axios.get(this.apiUrl).then((response) => {
       this.isLoading = false;
       if (response.data.data) {
