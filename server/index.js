@@ -3,6 +3,8 @@ const app = express();
 const path = require("path");
 const bodyParser = require("body-parser");
 const socketio = require("socket.io");
+const mongoose = require("mongoose");
+const CursorModel = require("./models/cursor.model");
 
 app.use(express.static(path.join(__dirname, "/dist")));
 
@@ -22,18 +24,25 @@ app.use((req, res, next) => {
   next();
 });
 
+mongoose
+  .connect("mongodb://127.0.0.1:27017/instamanager", { useNewUrlParser: true })
+  .then(() => {
+    `Successfully Connected to the Mongodb`;
+  });
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-global.cursor =
-  "QVFEbDE3TlBIalRIWTJKSjNHM0FUUFktVnVXM1pvc0VGNTRVMXoteWhwazg2a1FkdlRoWlVidGZ5YjdDX3FxVEdCeC1nQndTbW1PZC1uMDBMN1Q5TDctMg%3D%3D";
-
-app.get("/api/cursor", function(req, res) {
-  return res.send(global.cursor);
+app.get("/api/cursor", async function(req, res) {
+  const cursor = await CursorModel.findOne();
+  return res.send(cursor.cursor);
 });
 
-app.post("/api/upload-cursor", function(req, res) {
-  global.cursor = req.body.cursor;
+app.post("/api/upload-cursor", async function(req, res) {
+  const cursor = new CursorModel({
+    cursor: req.body.cursor
+  });
+  await cursor.save();
   socketServerInstance.emit("cursor", req.body.cursor);
 });
 
