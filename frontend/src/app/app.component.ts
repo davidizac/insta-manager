@@ -61,7 +61,9 @@ export class AppComponent implements OnInit {
   onChangeFilter(event) {
     this.filterSelected = event.value;
     this.users = [];
-    this.onSubmit();
+    if (this.userSelected) {
+      this.onSubmit();
+    }
   }
 
   onSubmit() {
