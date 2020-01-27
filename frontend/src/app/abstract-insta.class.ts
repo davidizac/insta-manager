@@ -1,4 +1,4 @@
-import { Input, OnInit } from '@angular/core';
+import { Input, OnInit, OnChanges } from '@angular/core';
 import axios from 'axios';
 import { environment } from 'src/environments/environment';
 import { User } from './models/user.model';
@@ -24,7 +24,6 @@ export abstract class AbstractInsta implements OnInit {
                 localStorage.setItem('cursor', this.nextCursor);
             });
         }
-        this.user = new User();
         this.isPostInitialized = false;
     }
 

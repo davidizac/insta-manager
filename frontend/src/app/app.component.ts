@@ -79,6 +79,7 @@ export class AppComponent implements OnInit {
   getPopularPic() {
     this.popularPostComponent.isLoading = true;
     this.popularPostComponent.resetField();
+    this.popularPostComponent.user = this.userSelected;
     this.popularPostComponent.getPopularPic()
       .catch(() => {
         if (!this.formControl.hasError('isUserDoesNotExist')) {
@@ -93,6 +94,7 @@ export class AppComponent implements OnInit {
   getAllPics() {
     this.likesViewerComponent.isLoading = true;
     this.likesViewerComponent.resetField();
+    this.likesViewerComponent.user = this.userSelected;
     this.likesViewerComponent.getAllPics()
       .catch(() => {
         if (!this.formControl.hasError('isUserDoesNotExist')) {
@@ -111,7 +113,7 @@ export class AppComponent implements OnInit {
   }
 
   getUserSelected(event: MatAutocompleteSelectedEvent) {
-    this.userSelected = event.option.value;
+    this.userSelected = new User(event.option.value);
     this.onSubmit();
   }
 

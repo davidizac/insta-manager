@@ -13,8 +13,6 @@ export class UserInfoComponent implements OnInit {
   @Input() user: User;
 
   ngOnInit() {
-    console.log(this.user);
-
   }
 
 }
