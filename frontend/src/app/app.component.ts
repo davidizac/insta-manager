@@ -3,7 +3,7 @@ import { PopularPostComponent } from './popular-post/popular-post.component';
 import { LikesViewerComponent } from './likes-viewer/likes-viewer.component';
 import { SocketService } from './socket/socket.service';
 import { FormControl } from '@angular/forms';
-import { switchMap, debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
+import { switchMap, debounceTime, distinctUntilChanged, tap, filter } from 'rxjs/operators';
 import axios from 'axios';
 import { User } from './models/user.model';
 @Component({
@@ -35,13 +35,16 @@ export class AppComponent implements OnInit {
     this.username.valueChanges
       .pipe(
         tap(() => this.users = []),
-        debounceTime(500),
+        filter(() => !!this.username.value),
+        debounceTime(200),
         distinctUntilChanged(),
         switchMap(() => {
           return axios.get(this.apiQueryUrl)
             .then(res => {
-              this.users = res.data.users
-                .map(user => new User(user.user));
+              if (res.data.users) {
+                this.users = res.data.users
+                  .map(user => new User(user.user));
+              }
             });
         })
       )

@@ -84,3 +84,9 @@ app-user-info {
   display: block;
   width: 100%;
 }
+
+@media screen and (max-width: 500px) {
+  .mat-option {
+    height: 70px;
+  }
+}
