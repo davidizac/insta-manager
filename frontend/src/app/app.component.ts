@@ -37,6 +37,7 @@ export class AppComponent implements OnInit {
     this.formControl.valueChanges
       .pipe(
         tap(() => this.users = []),
+        tap(() => this.userSelected = null),
         filter(() => !!this.formControl.value),
         debounceTime(200),
         distinctUntilChanged(),
