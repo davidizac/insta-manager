@@ -60,6 +60,9 @@ export class AppComponent implements OnInit {
 
   onChangeFilter(event) {
     this.filterSelected = event.value;
+    this.userSelected = null;
+    this.formControl = new FormControl();
+    this.users = [];
   }
 
   onSubmit() {
