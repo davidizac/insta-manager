@@ -28,7 +28,7 @@ export class PopularPostComponent extends AbstractInsta {
       this.totalPics = data.count;
       this.getPopularPicForCurrentLoad(data.edges);
       this.isLoading = false;
-      if (data.page_info.has_next_page && this.iterationNumber < 100 && data.edges[0].node.owner.id === this.userId) {
+      if (data.page_info.has_next_page && this.iterationNumber < 100 && data.edges[0].node.owner.id === this.user.pk) {
         this.nextCursor = data.page_info.end_cursor;
         setTimeout(() => {
           this.getPopularPic();

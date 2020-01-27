@@ -1,12 +1,11 @@
 import { Input, OnInit } from '@angular/core';
 import axios from 'axios';
 import { environment } from 'src/environments/environment';
+import { User } from './models/user.model';
 
 export abstract class AbstractInsta implements OnInit {
-    @Input() username: string;
+    @Input() user: User;
     nextCursor = localStorage.getItem('cursor');
-    userId: string;
-    profilPic: string;
     isPostInitialized = false;
     first = 50;
     query_hash = 'e769aa130647d2354c40ea6a439bfc08';
@@ -25,31 +24,15 @@ export abstract class AbstractInsta implements OnInit {
                 localStorage.setItem('cursor', this.nextCursor);
             });
         }
-        this.userId = null;
-        this.profilPic = null;
+        this.user = new User();
         this.isPostInitialized = false;
     }
 
     get apiUrl(): string {
-        if (this.userId && this.nextCursor) {
+        if (this.user.pk && this.nextCursor) {
             // tslint:disable-next-line:max-line-length
-            return `https://www.instagram.com/graphql/query/?query_hash=${this.query_hash}&variables={"id":"${this.userId}","first":${this.first},"after":"${this.nextCursor}"}`;
+            return `https://www.instagram.com/graphql/query/?query_hash=${this.query_hash}&variables={"id":"${this.user.pk}","first":${this.first},"after":"${this.nextCursor}"}`;
         }
         return '';
     }
-
-    public getUserData(): Promise<void> {
-        return axios.get(`https://instagram.com/${this.username}`).then(res => {
-            const parser = new DOMParser();
-            const html = parser.parseFromString(res.data, 'text/html');
-            const scripts = html.querySelectorAll('script');
-            scripts.forEach(script => {
-                try {
-                    this.userId = script.innerText.toString().split(`"id":`)[1].split(`"`)[1];
-                    this.profilPic = script.innerText.toString().split(`"profile_pic_url":`)[1].split(`"`)[1].replace(/\\u0026/g, '&');
-                } catch (e) { }
-            });
-        });
-    }
-
 }

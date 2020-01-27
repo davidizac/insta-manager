@@ -6,6 +6,7 @@ import { FormControl } from '@angular/forms';
 import { switchMap, debounceTime, distinctUntilChanged, tap, filter } from 'rxjs/operators';
 import axios from 'axios';
 import { User } from './models/user.model';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,10 +14,11 @@ import { User } from './models/user.model';
 })
 export class AppComponent implements OnInit {
 
-  username = new FormControl();
+  formControl = new FormControl();
   filterSelected = 'Popular Post';
   filters: string[] = ['Popular Post', 'All Posts'];
   users: Array<User> = [];
+  userSelected: User;
 
   constructor(private socketService: SocketService) { }
 
@@ -24,18 +26,18 @@ export class AppComponent implements OnInit {
   @ViewChild(LikesViewerComponent, { static: true }) likesViewerComponent: LikesViewerComponent;
 
   get apiQueryUrl(): string {
-    if (this.username.value) {
-      return `https://www.instagram.com/web/search/topsearch/?query=${this.username.value}`;
+    if (this.formControl.value) {
+      return `https://www.instagram.com/web/search/topsearch/?query=${this.formControl.value}`;
     }
     return '';
   }
 
   ngOnInit() {
 
-    this.username.valueChanges
+    this.formControl.valueChanges
       .pipe(
         tap(() => this.users = []),
-        filter(() => !!this.username.value),
+        filter(() => !!this.formControl.value),
         debounceTime(200),
         distinctUntilChanged(),
         switchMap(() => {
@@ -73,45 +75,32 @@ export class AppComponent implements OnInit {
     }
   }
 
-  startComponent(component) {
-    component.isLoading = true;
-    component.resetField();
-    return component.getUserData()
-      .catch(() => {
-        this.username.setErrors({
-          isUserDoesNotExist: true
-        });
-        component.isLoading = false;
-      });
-  }
 
   getPopularPic() {
-    this.startComponent(this.popularPostComponent)
-      .then(() => {
-        this.popularPostComponent.getPopularPic()
-          .catch(() => {
-            if (!this.username.hasError('isUserDoesNotExist')) {
-              this.username.setErrors({
-                isPrivateAccount: true
-              });
-              this.popularPostComponent.isLoading = false;
-            }
+    this.popularPostComponent.isLoading = true;
+    this.popularPostComponent.resetField();
+    this.popularPostComponent.getPopularPic()
+      .catch(() => {
+        if (!this.formControl.hasError('isUserDoesNotExist')) {
+          this.formControl.setErrors({
+            isPrivateAccount: true
           });
+          this.popularPostComponent.isLoading = false;
+        }
       });
   }
 
   getAllPics() {
-    this.startComponent(this.likesViewerComponent)
-      .then(() => {
-        this.likesViewerComponent.getAllPics()
-          .catch(() => {
-            if (!this.username.hasError('isUserDoesNotExist')) {
-              this.username.setErrors({
-                isPrivateAccount: true
-              });
-              this.likesViewerComponent.isLoading = false;
-            }
+    this.likesViewerComponent.isLoading = true;
+    this.likesViewerComponent.resetField();
+    this.likesViewerComponent.getAllPics()
+      .catch(() => {
+        if (!this.formControl.hasError('isUserDoesNotExist')) {
+          this.formControl.setErrors({
+            isPrivateAccount: true
           });
+          this.likesViewerComponent.isLoading = false;
+        }
       });
   }
 
@@ -121,6 +110,13 @@ export class AppComponent implements OnInit {
     }
   }
 
+  getUserSelected(event: MatAutocompleteSelectedEvent) {
+    this.userSelected = event.option.value;
+    this.onSubmit();
+  }
 
+  displayFn(user?: User): string | undefined {
+    return user ? user.username : undefined;
+  }
 
 }

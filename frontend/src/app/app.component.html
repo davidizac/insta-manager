@@ -3,57 +3,34 @@
     <div class="input">
       <div class="insert-user">
         <mat-form-field class="example-full-width">
-          <input
-            spellcheck="false"
-            matInput
-            placeholder="Instagram Username"
-            (keyup)="handleKeyUp($event)"
-            [formControl]="username"
-            [matAutocomplete]="auto"
-          />
-          <mat-error *ngIf="username.hasError('isPrivateAccount')">
+          <input spellcheck="false" matInput placeholder="Instagram Username" (keyup)="handleKeyUp($event)"
+            [formControl]="formControl" [matAutocomplete]="auto" />
+          <mat-error *ngIf="formControl.hasError('isPrivateAccount')">
             This account is private.
           </mat-error>
-          <mat-error *ngIf="username.hasError('isUserDoesNotExist')">
+          <mat-error *ngIf="formControl.hasError('isUserDoesNotExist')">
             This username does not exist.
           </mat-error>
-          <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let user of users" [value]="user.username">
+          <mat-autocomplete (optionSelected)="getUserSelected($event)" [displayWith]="displayFn"
+            #auto="matAutocomplete">
+            <mat-option *ngFor="let user of users" [value]="user">
               <app-user-info [user]="user"></app-user-info>
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-
-        <button mat-raised-button color="primary" (click)="onSubmit()">
-          Submit
-        </button>
       </div>
-      <mat-radio-group
-        aria-labelledby="example-radio-group-label"
-        class="example-radio-group"
-        [(ngModel)]="filterSelected"
-      >
-        <mat-radio-button
-          class="example-radio-button"
-          [ngClass]="{ selected: filter === filterSelected }"
-          *ngFor="let filter of filters"
-          [value]="filter"
-          (change)="onChangeFilter($event)"
-        >
+      <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+        [(ngModel)]="filterSelected">
+        <mat-radio-button class="example-radio-button" [ngClass]="{ selected: filter === filterSelected }"
+          *ngFor="let filter of filters" [value]="filter" (change)="onChangeFilter($event)">
           {{ filter }}
         </mat-radio-button>
       </mat-radio-group>
     </div>
 
     <div class="output">
-      <app-popular-post
-        [hidden]="filterSelected !== 'Popular Post'"
-        [username]="username.value"
-      ></app-popular-post>
-      <app-likes-viewer
-        [hidden]="filterSelected !== 'All Posts'"
-        [username]="username.value"
-      ></app-likes-viewer>
+      <app-popular-post [hidden]="filterSelected !== 'Popular Post'" [user]="userSelected"></app-popular-post>
+      <app-likes-viewer [hidden]="filterSelected !== 'All Posts'" [user]="userSelected"></app-likes-viewer>
     </div>
   </div>
 </div>
