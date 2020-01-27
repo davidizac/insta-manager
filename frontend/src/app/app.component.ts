@@ -1,35 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SocketService } from './socket/socket.service';
 import { FormControl } from '@angular/forms';
 import { switchMap, debounceTime, distinctUntilChanged, tap, filter } from 'rxjs/operators';
 import axios from 'axios';
 import { User } from './models/user.model';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { environment } from 'src/environments/environment';
+import { Subscription } from 'rxjs';
+import { searchUrl } from './instagram-api.constant';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
   formControl = new FormControl();
   filterSelected = 'Popular Post';
   filters: string[] = ['Popular Post', 'All Posts'];
   users: Array<User> = [];
   userSelected: User;
+  mainSubscription: Subscription = new Subscription();
 
   constructor(private socketService: SocketService) { }
 
-  get apiQueryUrl(): string {
-    if (this.formControl.value) {
-      return `https://www.instagram.com/web/search/topsearch/?query=${this.formControl.value}`;
-    }
-    return '';
-  }
-
   ngOnInit() {
-
-    this.formControl.valueChanges
+    const formControlSubscription = this.formControl.valueChanges
       .pipe(
         tap(() => this.users = []),
         tap(() => this.userSelected = null),
@@ -37,7 +34,7 @@ export class AppComponent implements OnInit {
         debounceTime(200),
         distinctUntilChanged(),
         switchMap(() => {
-          return axios.get(this.apiQueryUrl)
+          return axios.get(searchUrl(this.formControl.value))
             .then(res => {
               if (res.data.users) {
                 this.users = res.data.users
@@ -48,23 +45,46 @@ export class AppComponent implements OnInit {
       )
       .subscribe();
 
-    this.socketService.getCursorAsObservable()
+    const socketSubscription = this.socketService.getCursorAsObservable()
       .subscribe(newCursor => {
-        localStorage.setItem('cursor', newCursor);
+        if (newCursor) {
+          localStorage.setItem('cursor', newCursor);
+        }
       });
+
+    const nextCursor = localStorage.getItem('cursor');
+    if (!nextCursor) {
+      axios.get(`${environment.serverUrl}/api/cursor`)
+        .then(res => {
+          localStorage.setItem('cursor', res.data);
+        });
+    }
+
+    this.mainSubscription.add(socketSubscription);
+    this.mainSubscription.add(formControlSubscription);
   }
 
   onChangeFilter(event) {
     this.filterSelected = event.value;
-    this.users = [];
   }
 
   getUserSelected(event: MatAutocompleteSelectedEvent) {
-    this.userSelected = new User(event.option.value);
+    const user = new User(event.option.value);
+    if (user.is_private) {
+      this.formControl.setErrors({
+        isPrivateAccount: true
+      });
+    } else {
+      this.userSelected = user;
+    }
   }
 
   displayFn(user?: User): string | undefined {
     return user ? user.username : undefined;
+  }
+
+  ngOnDestroy() {
+    this.mainSubscription.unsubscribe();
   }
 
 }

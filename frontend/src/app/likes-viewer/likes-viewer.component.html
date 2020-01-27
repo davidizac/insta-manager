@@ -1,6 +1,6 @@
 <mat-progress-spinner class="example-margin" color="primary" mode="indeterminate" value="50" *ngIf="isLoading">
 </mat-progress-spinner>
-<div class="images" *ngIf="isPostInitialized">
+<div class="images">
   <div class="insta-pic-list" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="150"
     (scrolled)="onScroll()">
     <div class="insta-pic" *ngFor="let post of posts">

@@ -29,9 +29,9 @@
     </div>
 
     <div class="output" *ngIf="userSelected">
-      <app-popular-post *ngIf="filterSelected === 'Popular Post'" [user]="userSelected" [form]="formControl">
+      <app-popular-post *ngIf="filterSelected === 'Popular Post'" [user]="userSelected">
       </app-popular-post>
-      <app-likes-viewer *ngIf="filterSelected === 'All Posts'" [user]="userSelected" [form]="formControl">
+      <app-likes-viewer *ngIf="filterSelected === 'All Posts'" [user]="userSelected">
       </app-likes-viewer>
     </div>
   </div>
