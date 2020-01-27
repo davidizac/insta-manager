@@ -1,0 +1,37 @@
+.main {
+  display: flex;
+  height: 47px;
+
+  .names {
+    display: flex;
+    width: 75%;
+    span {
+      max-width: 100%;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      display: block;
+      margin-right: 6px;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .is-verified {
+      margin-top: 5px;
+      img {
+        width: 20px;
+      }
+    }
+  }
+
+  .image {
+    margin-right: 8px;
+    min-width: 19%;
+    width: 19%;
+    display: flex;
+    align-items: center;
+    img {
+      width: 100%;
+      border-radius: 24px;
+    }
+  }
+}

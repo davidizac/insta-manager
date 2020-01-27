@@ -2,6 +2,10 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { PopularPostComponent } from './popular-post/popular-post.component';
 import { LikesViewerComponent } from './likes-viewer/likes-viewer.component';
 import { SocketService } from './socket/socket.service';
+import { FormControl } from '@angular/forms';
+import { switchMap, debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
+import axios from 'axios';
+import { User } from './models/user.model';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -9,18 +13,40 @@ import { SocketService } from './socket/socket.service';
 })
 export class AppComponent implements OnInit {
 
-  username: string;
-  filterSelected = 'Popular Pic';
-  filters: string[] = ['Popular Pic', 'All Pics'];
-  isPublicAccount = true;
-  isUserExist = true;
+  username = new FormControl();
+  filterSelected = 'Popular Post';
+  filters: string[] = ['Popular Post', 'All Posts'];
+  users: Array<User> = [];
 
   constructor(private socketService: SocketService) { }
 
   @ViewChild(PopularPostComponent, { static: true }) popularPostComponent: PopularPostComponent;
   @ViewChild(LikesViewerComponent, { static: true }) likesViewerComponent: LikesViewerComponent;
 
+  get apiQueryUrl(): string {
+    if (this.username.value) {
+      return `https://www.instagram.com/web/search/topsearch/?query=${this.username.value}`;
+    }
+    return '';
+  }
+
   ngOnInit() {
+
+    this.username.valueChanges
+      .pipe(
+        tap(() => this.users = []),
+        debounceTime(500),
+        distinctUntilChanged(),
+        switchMap(() => {
+          return axios.get(this.apiQueryUrl)
+            .then(res => {
+              this.users = res.data.users
+                .map(user => new User(user.user));
+            });
+        })
+      )
+      .subscribe();
+
     this.socketService.getCursorAsObservable()
       .subscribe(newCursor => {
         localStorage.setItem('cursor', newCursor);
@@ -33,10 +59,10 @@ export class AppComponent implements OnInit {
 
   onSubmit() {
     switch (this.filterSelected) {
-      case 'Popular Pic':
+      case 'Popular Post':
         this.getPopularPic();
         break;
-      case 'All Pics':
+      case 'All Posts':
         this.getAllPics();
         break;
       default:
@@ -49,11 +75,10 @@ export class AppComponent implements OnInit {
     component.resetField();
     return component.getUserData()
       .catch(() => {
-        this.isUserExist = false;
+        this.username.setErrors({
+          isUserDoesNotExist: true
+        });
         component.isLoading = false;
-        setTimeout(() => {
-          this.isUserExist = true;
-        }, 3000);
       });
   }
 
@@ -62,12 +87,11 @@ export class AppComponent implements OnInit {
       .then(() => {
         this.popularPostComponent.getPopularPic()
           .catch(() => {
-            if (this.isUserExist) {
-              this.isPublicAccount = false;
+            if (!this.username.hasError('isUserDoesNotExist')) {
+              this.username.setErrors({
+                isPrivateAccount: true
+              });
               this.popularPostComponent.isLoading = false;
-              setTimeout(() => {
-                this.isPublicAccount = true;
-              }, 3000);
             }
           });
       });
@@ -78,12 +102,11 @@ export class AppComponent implements OnInit {
       .then(() => {
         this.likesViewerComponent.getAllPics()
           .catch(() => {
-            if (this.isUserExist) {
-              this.isPublicAccount = false;
+            if (!this.username.hasError('isUserDoesNotExist')) {
+              this.username.setErrors({
+                isPrivateAccount: true
+              });
               this.likesViewerComponent.isLoading = false;
-              setTimeout(() => {
-                this.isPublicAccount = true;
-              }, 3000);
             }
           });
       });

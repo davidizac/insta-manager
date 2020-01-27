@@ -16,14 +16,16 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { UserInfoComponent } from './components/user-info/user-info.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PopularPostComponent,
     LikesViewerComponent,
-    InstaCardComponent
+    InstaCardComponent,
+    UserInfoComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +41,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatTooltipModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatAutocompleteModule
   ],
   providers: [],
   bootstrap: [AppComponent]

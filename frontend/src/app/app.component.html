@@ -1,25 +1,29 @@
 <div class="center">
   <div class="content">
     <div class="input">
-      <div
-        class="insert-user"
-        [ngClass]="{ 'display-error': !isUserExist || !isPublicAccount }"
-      >
+      <div class="insert-user">
         <mat-form-field class="example-full-width">
           <input
             spellcheck="false"
             matInput
             placeholder="Instagram Username"
             (keyup)="handleKeyUp($event)"
-            [(ngModel)]="username"
+            [formControl]="username"
+            [matAutocomplete]="auto"
           />
+          <mat-error *ngIf="username.hasError('isPrivateAccount')">
+            This account is private.
+          </mat-error>
+          <mat-error *ngIf="username.hasError('isUserDoesNotExist')">
+            This username does not exist.
+          </mat-error>
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let user of users" [value]="user.username">
+              <app-user-info [user]="user"></app-user-info>
+            </mat-option>
+          </mat-autocomplete>
         </mat-form-field>
-        <span class="error-message" *ngIf="!isUserExist"
-          >This username does not exist.</span
-        >
-        <span class="error-message" *ngIf="!isPublicAccount"
-          >This account is private.</span
-        >
+
         <button mat-raised-button color="primary" (click)="onSubmit()">
           Submit
         </button>
@@ -43,12 +47,12 @@
 
     <div class="output">
       <app-popular-post
-        [hidden]="filterSelected !== 'Popular Pic'"
-        [username]="username"
+        [hidden]="filterSelected !== 'Popular Post'"
+        [username]="username.value"
       ></app-popular-post>
       <app-likes-viewer
-        [hidden]="filterSelected !== 'All Pics'"
-        [username]="username"
+        [hidden]="filterSelected !== 'All Posts'"
+        [username]="username.value"
       ></app-likes-viewer>
     </div>
   </div>
