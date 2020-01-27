@@ -24,6 +24,7 @@ export abstract class AbstractInsta implements OnInit {
                 localStorage.setItem('cursor', this.nextCursor);
             });
         }
+        this.user = new User();
         this.isPostInitialized = false;
     }
 
