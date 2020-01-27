@@ -3,8 +3,8 @@
     <div class="input">
       <div class="insert-user">
         <mat-form-field class="example-full-width">
-          <input spellcheck="false" matInput placeholder="Instagram Username" (keyup)="handleKeyUp($event)"
-            [formControl]="formControl" [matAutocomplete]="auto" />
+          <input spellcheck="false" matInput placeholder="Instagram Username" [formControl]="formControl"
+            [matAutocomplete]="auto" />
           <mat-error *ngIf="formControl.hasError('isPrivateAccount')">
             This account is private.
           </mat-error>
@@ -28,9 +28,11 @@
       </mat-radio-group>
     </div>
 
-    <div class="output">
-      <app-popular-post [hidden]="filterSelected !== 'Popular Post'" [user]="userSelected"></app-popular-post>
-      <app-likes-viewer [hidden]="filterSelected !== 'All Posts'" [user]="userSelected"></app-likes-viewer>
+    <div class="output" *ngIf="userSelected">
+      <app-popular-post *ngIf="filterSelected === 'Popular Post'" [user]="userSelected" [form]="formControl">
+      </app-popular-post>
+      <app-likes-viewer *ngIf="filterSelected === 'All Posts'" [user]="userSelected" [form]="formControl">
+      </app-likes-viewer>
     </div>
   </div>
 </div>

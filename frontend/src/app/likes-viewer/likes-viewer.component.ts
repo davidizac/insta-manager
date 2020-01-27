@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractInsta } from '../abstract-insta.class';
 import axios from 'axios';
 import { Post } from '../models/post.model';
@@ -8,11 +8,17 @@ import { Post } from '../models/post.model';
   templateUrl: './likes-viewer.component.html',
   styleUrls: ['./likes-viewer.component.scss']
 })
-export class LikesViewerComponent extends AbstractInsta {
+export class LikesViewerComponent extends AbstractInsta implements OnInit {
 
   posts: Array<Post>;
 
-  getAllPics() {
+  ngOnInit() {
+    super.ngOnInit();
+    this.posts = [];
+    this.getAllPosts();
+  }
+
+  getAllPosts() {
     return axios.get(this.apiUrl).then((response) => {
       this.isLoading = false;
       if (response.data.data) {
@@ -20,7 +26,15 @@ export class LikesViewerComponent extends AbstractInsta {
         this.nextCursor = data.page_info.end_cursor;
         this.getImagesForCurrentLoad(data.edges);
       }
-    });
+    })
+      .catch(() => {
+        if (!this.form.hasError('isUserDoesNotExist')) {
+          this.form.setErrors({
+            isPrivateAccount: true
+          });
+          this.isLoading = false;
+        }
+      });
   }
 
   getImagesForCurrentLoad(nodes) {
@@ -38,12 +52,7 @@ export class LikesViewerComponent extends AbstractInsta {
   }
 
   onScroll() {
-    this.getAllPics();
-  }
-
-  resetField() {
-    super.resetField();
-    this.posts = [];
+    this.getAllPosts();
   }
 
 }

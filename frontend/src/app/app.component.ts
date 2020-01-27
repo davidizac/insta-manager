@@ -1,6 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { PopularPostComponent } from './popular-post/popular-post.component';
-import { LikesViewerComponent } from './likes-viewer/likes-viewer.component';
+import { Component, OnInit } from '@angular/core';
 import { SocketService } from './socket/socket.service';
 import { FormControl } from '@angular/forms';
 import { switchMap, debounceTime, distinctUntilChanged, tap, filter } from 'rxjs/operators';
@@ -21,9 +19,6 @@ export class AppComponent implements OnInit {
   userSelected: User;
 
   constructor(private socketService: SocketService) { }
-
-  @ViewChild(PopularPostComponent, { static: true }) popularPostComponent: PopularPostComponent;
-  @ViewChild(LikesViewerComponent, { static: true }) likesViewerComponent: LikesViewerComponent;
 
   get apiQueryUrl(): string {
     if (this.formControl.value) {
@@ -62,64 +57,10 @@ export class AppComponent implements OnInit {
   onChangeFilter(event) {
     this.filterSelected = event.value;
     this.users = [];
-    if (this.userSelected) {
-      this.onSubmit();
-    }
-  }
-
-  onSubmit() {
-    switch (this.filterSelected) {
-      case 'Popular Post':
-        this.getPopularPic();
-        break;
-      case 'All Posts':
-        this.getAllPics();
-        break;
-      default:
-        break;
-    }
-  }
-
-
-  getPopularPic() {
-    this.popularPostComponent.isLoading = true;
-    this.popularPostComponent.resetField();
-    this.popularPostComponent.user = this.userSelected;
-    this.popularPostComponent.getPopularPic()
-      .catch(() => {
-        if (!this.formControl.hasError('isUserDoesNotExist')) {
-          this.formControl.setErrors({
-            isPrivateAccount: true
-          });
-          this.popularPostComponent.isLoading = false;
-        }
-      });
-  }
-
-  getAllPics() {
-    this.likesViewerComponent.isLoading = true;
-    this.likesViewerComponent.resetField();
-    this.likesViewerComponent.user = this.userSelected;
-    this.likesViewerComponent.getAllPics()
-      .catch(() => {
-        if (!this.formControl.hasError('isUserDoesNotExist')) {
-          this.formControl.setErrors({
-            isPrivateAccount: true
-          });
-          this.likesViewerComponent.isLoading = false;
-        }
-      });
-  }
-
-  handleKeyUp(event) {
-    if (event.keyCode === 13) {
-      this.onSubmit();
-    }
   }
 
   getUserSelected(event: MatAutocompleteSelectedEvent) {
     this.userSelected = new User(event.option.value);
-    this.onSubmit();
   }
 
   displayFn(user?: User): string | undefined {
