@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const bodyParser = require("body-parser");
-const socketio = require("socket.io");
 const mongoose = require("mongoose");
 const CursorModel = require("./models/cursor.model");
 
@@ -33,17 +32,16 @@ mongoose
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/api/cursor", async function(req, res) {
+app.get("/api/cursor", async function (req, res) {
   const cursor = await CursorModel.findOne();
   return res.send(cursor.cursor);
 });
 
-app.post("/api/upload-cursor", async function(req, res) {
+app.post("/api/upload-cursor", async function (req, res) {
   const cursor = new CursorModel({
     cursor: req.body.cursor
   });
   await cursor.save();
-  socketServerInstance.emit("cursor", req.body.cursor);
 });
 
 app.all("*", (req, res) => {
@@ -51,7 +49,3 @@ app.all("*", (req, res) => {
 });
 
 server = app.listen(3000);
-const socketServerInstance = socketio.listen(server);
-socketServerInstance.on("connection", function(socket) {
-  socketServerInstance.emit("cursor", global.cursor);
-});

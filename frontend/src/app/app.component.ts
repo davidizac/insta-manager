@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { SocketService } from './socket/socket.service';
 import { FormControl } from '@angular/forms';
 import { switchMap, debounceTime, distinctUntilChanged, tap, filter } from 'rxjs/operators';
 import axios from 'axios';
@@ -22,8 +21,9 @@ export class AppComponent implements OnInit, OnDestroy {
   users: Array<User> = [];
   userSelected: User;
   mainSubscription: Subscription = new Subscription();
+  cursor: string;
 
-  constructor(private socketService: SocketService) { }
+  constructor() { }
 
   ngOnInit() {
     const formControlSubscription = this.formControl.valueChanges
@@ -45,22 +45,12 @@ export class AppComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    const socketSubscription = this.socketService.getCursorAsObservable()
-      .subscribe(newCursor => {
-        if (newCursor) {
-          localStorage.setItem('cursor', newCursor);
-        }
+    axios.get(`${environment.serverUrl}/api/cursor`)
+      .then(res => {
+        this.cursor = res.data;
       });
 
-    const nextCursor = localStorage.getItem('cursor');
-    if (!nextCursor) {
-      axios.get(`${environment.serverUrl}/api/cursor`)
-        .then(res => {
-          localStorage.setItem('cursor', res.data);
-        });
-    }
 
-    this.mainSubscription.add(socketSubscription);
     this.mainSubscription.add(formControlSubscription);
   }
 

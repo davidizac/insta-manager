@@ -15,11 +15,11 @@ export class PopularPostComponent extends AbstractInsta implements OnChanges {
   post: Post;
   totalPics = 0;
 
-  ngOnChanges() {
+  async ngOnChanges() {
     super.ngOnChanges();
     this.post = new Post();
     this.iterationNumber = -1;
-    this.getPopularPost();
+    await this.getPopularPost();
   }
 
   get progressBarValue(): number {
@@ -29,8 +29,9 @@ export class PopularPostComponent extends AbstractInsta implements OnChanges {
     return 0;
   }
 
-  getPopularPost() {
-    return axios.get(getPostUrl(this.user.pk, this.nextCursor)).then((response) => {
+  async getPopularPost() {
+    try {
+      const response = await axios.get(getPostUrl(this.user.pk, this.nextCursor));
       this.iterationNumber++;
       const data = response.data.data.user.edge_owner_to_timeline_media;
       this.totalPics = data.count;
@@ -38,9 +39,13 @@ export class PopularPostComponent extends AbstractInsta implements OnChanges {
       this.isLoading = false;
       if (data.page_info.has_next_page && this.iterationNumber < 100 && data.edges[0].node.owner.id === this.user.pk) {
         this.nextCursor = data.page_info.end_cursor;
-        this.getPopularPost();
+        return await this.getPopularPost();
       }
-    });
+
+    } catch (e) {
+      console.log(e);
+      return await this.getPopularPost();
+    }
   }
 
   getPopularPostForCurrentLoad(nodes) {
